@@ -9,7 +9,7 @@ import { Validator } from '../types/validator';
 import { ControlTypes } from '../types/control-types';
 import { getInputTypeFromElement } from '../utils/get-input-type-from-element';
 
-export const createControl = <Type extends ControlTypes>(init: ControlInit<Type>) => {
+export const createControl = <Type extends ControlTypes>(init: ControlInit<Type>, validators?: Validator[]) => {
     const control = {};
     const setProperty = (name: keyof Control<any>, descriptor: PropertyDescriptor) => {
         Object.defineProperty(control, name, { ...descriptor, ...(descriptor.value ? { writable: false } : {}) });
@@ -121,14 +121,14 @@ export const createControl = <Type extends ControlTypes>(init: ControlInit<Type>
     });
 
     // Set up validity engine
-    const validators = [...(init.validators ?? [])];
-    setProperty('validators', { get: () => validators });
-    setProperty('addValidator', { value: (...validator: Validator[]) => validators.push(...validator) });
+    const _validators = [...(validators ?? [])];
+    setProperty('validators', { get: () => _validators });
+    setProperty('addValidator', { value: (...validator: Validator[]) => _validators.push(...validator) });
     setProperty('removeValidator', {
         value: (validator: Validator) => {
-            const idx = validators.indexOf(validator);
+            const idx = _validators.indexOf(validator);
             if (idx !== -1) {
-                validators.splice(idx, 1);
+                _validators.splice(idx, 1);
             }
         },
     });
@@ -143,12 +143,12 @@ export const createControl = <Type extends ControlTypes>(init: ControlInit<Type>
     // Subscribe to the value to track the validity by passing the value through every
     // registered validator
     _value.subscribe((changedValue) => {
-        if (!validators.length) {
+        if (!_validators.length) {
             _valid.set(true);
             return;
         }
 
-        const validatorErrors: (null | ControlError)[] = validators.map((validator) => validator(changedValue));
+        const validatorErrors: (null | ControlError)[] = _validators.map((validator) => validator(changedValue));
         _errors.set(validatorErrors.filter(isNonNull).reduce((cur, acc) => ({ ...cur, ...acc }), {}));
         _valid.set(validatorErrors.every((value) => value === null));
     });
