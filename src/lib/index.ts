@@ -1,2 +1,4 @@
 /** @format */
-export { createControl } from './create-control.directive';
+
+export { createControl } from './create-control';
+export { createControlGroup } from './create-control-group';
