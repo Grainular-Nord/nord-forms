@@ -11,6 +11,7 @@ export const getInputTypeFromElement = (element: HTMLInputElement): 'string' | '
         case 'number':
             return 'number';
         case 'checkbox':
+        case 'radio':
             return 'boolean';
         case 'text':
         default:
