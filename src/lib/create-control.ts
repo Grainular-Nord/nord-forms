@@ -128,7 +128,7 @@ export const createControl = <Type extends ControlTypes>(init: ControlInit<Type>
     setProperty('isValid', { get: () => _valid() });
 
     const _errors = grain<ControlError>({});
-    setProperty('errors', { get: () => _errors() });
+    setProperty('errors', { value: readonly(_errors) });
 
     // Subscribe to the value to track the validity by passing the value through every
     // registered validator

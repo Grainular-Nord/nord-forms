@@ -23,7 +23,7 @@ export type Control<Type> = {
     readonly validators: Validator[];
     readonly addValidator: (...validator: Validator[]) => void;
     readonly removeValidator: (validator: Validator) => void;
-    readonly errors: ControlError;
+    readonly errors: ReadonlyGrain<ControlError>;
     readonly reset: () => void;
     readonly nativeElement: HTMLInputElement | null;
 };
