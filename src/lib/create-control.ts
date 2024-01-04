@@ -85,8 +85,18 @@ export const createControl = <Type extends ControlTypes>(init: ControlInit<Type>
 
             // Set up the two way binding
             _value.subscribe((value) => {
-                if (inputElement) {
+                // handle non checkbox inputs
+                if (inputElement && inputElement.type !== 'checkbox') {
                     inputElement!.value = `${value ?? ''}`;
+                }
+
+                // handle checkbox inputs
+                if (inputElement && inputElement.type === 'checkbox') {
+                    if (value === true) {
+                        inputElement.setAttribute('checked', '');
+                    } else {
+                        inputElement.removeAttribute('checked');
+                    }
                 }
             });
 
