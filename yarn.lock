@@ -331,6 +331,11 @@
   resolved "https://registry.yarnpkg.com/@gar/promisify/-/promisify-1.1.3.tgz#555193ab2e3bb3b6adc3d551c9c030d9e860daf6"
   integrity sha512-k2Ty1JcVojjJFwrg/ThKi2ujJ7XNLYaFGNB/bWT9wGR+oSMJHMa5w+CUq6p/pVrKeNNgA7pCqEcjSnHVoqJQFw==
 
+"@grainular/nord@^1.7.5":
+  version "1.7.5"
+  resolved "https://registry.yarnpkg.com/@grainular/nord/-/nord-1.7.5.tgz#147adfcbc8998a6568d5fef26e2b2cda30ad2190"
+  integrity sha512-wJjtcE/N+txr1UVXstk8NhOS0OH3Bhbcie6bBrgbJRFUFrnerXAmVvZ6aL3PhSYQkQuD+rE7C/PKpXvoIr+ZTg==
+
 "@isaacs/cliui@^8.0.2":
   version "8.0.2"
   resolved "https://registry.yarnpkg.com/@isaacs/cliui/-/cliui-8.0.2.tgz#b37667b7bc181c168782259bab42474fbf52b550"
