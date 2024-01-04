@@ -3,11 +3,11 @@
 import { createDirective, grain, readonly } from '@grainular/nord';
 import { ControlInit } from '../types/control-init';
 import { Control } from '../types/control';
-import { defaultFormatter } from '../utils/default-formatter';
 import { ControlError } from '../types/control-error';
 import { isNonNull } from '../utils/is-non-null';
 import { Validator } from '../types/validator';
 import { ControlTypes } from '../types/control-types';
+import { getInputTypeFromElement } from '../utils/get-input-type-from-element';
 
 export const createControl = <Type extends ControlTypes>(init: ControlInit<Type>) => {
     const control = {};
@@ -45,9 +45,22 @@ export const createControl = <Type extends ControlTypes>(init: ControlInit<Type>
     setProperty('enable', { value: () => _disabled.set(false) });
 
     // Set up the control elements
-    const formatter = init.formatter ?? defaultFormatter<Type>;
     let inputElement: HTMLInputElement | null = null;
     setProperty('nativeElement', { get: () => inputElement });
+
+    // Set up the input value parse
+    let inputType: 'string' | 'number' | 'boolean' = 'string';
+    const parseValue = (value: string) => {
+        if (value === null || value === undefined) {
+            return value ?? null;
+        }
+
+        return {
+            string: (value: string) => value,
+            number: (value: string) => Number(value),
+            boolean: () => inputElement?.checked ?? false,
+        }[inputType](value);
+    };
 
     // Set up value
     const value = grain<Type | null>(init.value ?? null);
@@ -62,6 +75,7 @@ export const createControl = <Type extends ControlTypes>(init: ControlInit<Type>
             }
 
             inputElement = element;
+            inputType = getInputTypeFromElement(inputElement);
 
             // Handle enabled/disabled state and attribute
             _disabled.subscribe((state) => {
@@ -78,7 +92,7 @@ export const createControl = <Type extends ControlTypes>(init: ControlInit<Type>
             element.addEventListener(`input`, (ev) => {
                 if (ev.currentTarget) {
                     const target = ev.currentTarget as HTMLInputElement;
-                    value.set(formatter(target.value));
+                    value.set(parseValue(target.value) as Type);
                 }
             });
 
