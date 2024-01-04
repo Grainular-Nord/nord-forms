@@ -1,13 +1,13 @@
 /** @format */
 
 import { createDirective, grain, readonly } from '@grainular/nord';
-import { ControlInit } from '../types/control-init';
-import { Control } from '../types/control';
-import { ControlError } from '../types/control-error';
-import { isNonNull } from '../utils/is-non-null';
-import { Validator } from '../types/validator';
-import { ControlTypes } from '../types/control-types';
-import { getInputTypeFromElement } from '../utils/get-input-type-from-element';
+import { ControlInit } from '../../types/control-init';
+import { Control } from '../../types/control';
+import { ControlError } from '../../types/control-error';
+import { isNonNull } from '../../utils/is-non-null';
+import { Validator } from '../../types/validator';
+import { ControlTypes } from '../../types/control-types';
+import { getInputTypeFromElement } from '../../utils/get-input-type-from-element';
 
 export const createControl = <Type extends ControlTypes>(init: ControlInit<Type>, validators?: Validator[]) => {
     const control = {};
