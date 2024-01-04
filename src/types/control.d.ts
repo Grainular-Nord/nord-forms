@@ -7,6 +7,7 @@ import { ControlError } from './control-error';
 export type Control<Type> = {
     readonly control: Directive<Element>;
     readonly value: ReadonlyGrain<Type | null>;
+    readonly setValue: (value: Type | null) => void;
     readonly touched: ReadonlyGrain<boolean>;
     readonly isTouched: boolean;
     readonly disabled: ReadonlyGrain<boolean>;

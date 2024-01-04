@@ -63,8 +63,9 @@ export const createControl = <Type extends ControlTypes>(init: ControlInit<Type>
     };
 
     // Set up value
-    const value = grain<Type | null>(init.value ?? null);
-    setProperty('value', { value });
+    const _value = grain<Type | null>(init.value ?? null);
+    setProperty('value', { value: _value });
+    setProperty('setValue', { value: (value: Type | null) => _value.set(value) });
 
     // Create the control directive
     setProperty('control', {
@@ -83,7 +84,7 @@ export const createControl = <Type extends ControlTypes>(init: ControlInit<Type>
             });
 
             // Set up the two way binding
-            value.subscribe((value) => {
+            _value.subscribe((value) => {
                 if (inputElement) {
                     inputElement!.value = `${value ?? ''}`;
                 }
@@ -92,7 +93,7 @@ export const createControl = <Type extends ControlTypes>(init: ControlInit<Type>
             element.addEventListener(`input`, (ev) => {
                 if (ev.currentTarget) {
                     const target = ev.currentTarget as HTMLInputElement;
-                    value.set(parseValue(target.value) as Type);
+                    _value.set(parseValue(target.value) as Type);
                 }
             });
 
@@ -131,7 +132,7 @@ export const createControl = <Type extends ControlTypes>(init: ControlInit<Type>
 
     // Subscribe to the value to track the validity by passing the value through every
     // registered validator
-    value.subscribe((changedValue) => {
+    _value.subscribe((changedValue) => {
         if (!validators.length) {
             _valid.set(true);
             return;
@@ -148,7 +149,7 @@ export const createControl = <Type extends ControlTypes>(init: ControlInit<Type>
             _valid.set(true);
             _focused.set(false);
             _touched.set(false);
-            value.set(null);
+            _value.set(null);
         },
     });
 
