@@ -10,7 +10,10 @@ import { noop } from '../../utils/noop';
 import { ControlError } from '../../types/control-error';
 import { isNonNull } from '../../utils/is-non-null';
 
-export const createControlGroup = <Controls extends GroupControls>(controls: Controls, validators?: Validator[]) => {
+export const createControlGroup = <Controls extends GroupControls>(
+    controls: Controls,
+    validators?: Validator<any>[]
+) => {
     const group = {};
     const controlNames = Object.keys(controls);
     const setProperty = (name: keyof ControlGroup<Controls>, descriptor: PropertyDescriptor) => {
@@ -111,9 +114,9 @@ export const createControlGroup = <Controls extends GroupControls>(controls: Con
     // Set up validation engine
     const _validators = [...(validators ?? [])];
     setProperty('validators', { get: () => _validators });
-    setProperty('addValidator', { value: (...validator: Validator[]) => _validators.push(...validator) });
+    setProperty('addValidator', { value: (...validator: Validator<any>[]) => _validators.push(...validator) });
     setProperty('removeValidator', {
-        value: (validator: Validator) => {
+        value: (validator: Validator<any>) => {
             const idx = _validators.indexOf(validator);
             if (idx !== -1) {
                 _validators.splice(idx, 1);

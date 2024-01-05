@@ -4,8 +4,9 @@ import { ReadonlyGrain } from '@grainular/nord';
 import { Validator } from './validator';
 import { ControlError } from './control-error';
 import { ControlGroup } from './control-group';
+import { ControlTypes } from './control-types';
 
-export type Control<Type> = {
+export type Control<Type extends ControlTypes> = {
     readonly control: Directive<Element>;
     parentGroup: ControlGroup<any> | undefined;
     controlName: string | undefined;
@@ -25,9 +26,9 @@ export type Control<Type> = {
     readonly registerOnBlur: (handler: (event: FocusEvent) => void) => void;
     readonly valid: ReadonlyGrain<boolean>;
     readonly isValid: boolean;
-    readonly validators: Validator[];
-    readonly addValidator: (...validator: Validator[]) => void;
-    readonly removeValidator: (validator: Validator) => void;
+    readonly validators: Validator<Type>[];
+    readonly addValidator: (...validator: Validator<Type>[]) => void;
+    readonly removeValidator: (validator: Validator<Type>) => void;
     readonly errors: ReadonlyGrain<ControlError>;
     readonly reset: () => void;
     readonly nativeElement: HTMLInputElement | null;

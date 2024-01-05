@@ -2,4 +2,4 @@
 
 import { ControlError } from './control-error';
 
-export type Validator = (value: any) => null | ControlError;
+export type Validator<Type extends any> = (value: Type) => null | ControlError;

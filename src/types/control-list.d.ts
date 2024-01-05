@@ -3,6 +3,7 @@
 import { Directive, ReadonlyGrain } from '@grainular/nord';
 import { ControlGroup } from './control-group';
 import { ControlValues } from './control-values';
+import { Validator } from './validator';
 
 export type ControlList<ControlSchema extends ControlGroup<any>> = {
     readonly value: ReadonlyGrain<ControlValues<Controls>[]>;
@@ -19,9 +20,9 @@ export type ControlList<ControlSchema extends ControlGroup<any>> = {
     // Validation Properties
     readonly valid: ReadonlyGrain<boolean>;
     readonly isValid: boolean;
-    readonly validators: Validator[];
-    readonly addValidator: (...validator: Validator[]) => void;
-    readonly removeValidator: (validator: Validator) => void;
+    readonly validators: Validator<any[]>[];
+    readonly addValidator: (...validator: Validator<any[]>[]) => void;
+    readonly removeValidator: (validator: Validator<any[]>) => void;
     readonly errors: ReadonlyGrain<ControlError>;
 
     // Implementing iterator methods

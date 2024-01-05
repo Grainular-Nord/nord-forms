@@ -7,7 +7,7 @@ import { isNonNull } from '../../utils/is-non-null';
 
 export const createControlList = <ControlSchema extends ControlGroup<any>>(
     initial: ControlSchema[],
-    validators?: Validator[]
+    validators?: Validator<any[]>[]
 ) => {
     const list = {};
     const _controls = grain<ControlSchema[]>(initial);
@@ -45,9 +45,9 @@ export const createControlList = <ControlSchema extends ControlGroup<any>>(
     // Set up validation engine
     const _validators = [...(validators ?? [])];
     setProperty('validators', { get: () => _validators });
-    setProperty('addValidator', { value: (...validator: Validator[]) => _validators.push(...validator) });
+    setProperty('addValidator', { value: (...validator: Validator<any[]>[]) => _validators.push(...validator) });
     setProperty('removeValidator', {
-        value: (validator: Validator) => {
+        value: (validator: Validator<any[]>) => {
             const idx = _validators.indexOf(validator);
             if (idx !== -1) {
                 _validators.splice(idx, 1);

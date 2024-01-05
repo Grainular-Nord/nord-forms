@@ -10,7 +10,10 @@ import { ControlTypes } from '../../types/control-types';
 import { øParseValueByTarget } from './parse-value-by-target';
 import { øSetValueByTarget } from './set-value-by-target';
 
-export const createControl = <Type extends ControlTypes>(init: ControlInit<Type>, validators?: Validator[]) => {
+export const createControl = <Type extends ControlTypes>(
+    init: ControlInit<Type>,
+    validators?: Validator<Type | null>[]
+) => {
     const control = {};
     const setProperty = (name: keyof Control<any>, descriptor: PropertyDescriptor) => {
         Object.defineProperty(control, name, { ...descriptor, ...(descriptor.value ? { writable: false } : {}) });
@@ -103,9 +106,9 @@ export const createControl = <Type extends ControlTypes>(init: ControlInit<Type>
     // Set up validity engine
     const _validators = [...(validators ?? [])];
     setProperty('validators', { get: () => _validators });
-    setProperty('addValidator', { value: (...validator: Validator[]) => _validators.push(...validator) });
+    setProperty('addValidator', { value: (...validator: Validator<Type | null>[]) => _validators.push(...validator) });
     setProperty('removeValidator', {
-        value: (validator: Validator) => {
+        value: (validator: Validator<Type | null>) => {
             const idx = _validators.indexOf(validator);
             if (idx !== -1) {
                 _validators.splice(idx, 1);
