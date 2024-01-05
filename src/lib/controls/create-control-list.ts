@@ -17,8 +17,7 @@ export const createControlList = <ControlSchema extends ControlGroup<any>>(
 
     const _value = merged(
         derived(_controls, (controls) => {
-            const [val, ...rest] = controls.map((control) => control.value);
-            return mapped([val, ...rest]);
+            return mapped(controls.map((control) => control.value));
         })
     );
     setProperty('value', { value: _value });
