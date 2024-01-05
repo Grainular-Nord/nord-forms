@@ -9,6 +9,8 @@ import { FormActions } from './form-actions';
 export type ControlGroup<Controls extends GroupControls> = {
     readonly value: ReadonlyGrain<ControlValues<Controls>>;
     readonly rawValue: ControlValues<Controls>;
+    parentGroup: ControlGroup<any> | undefined;
+    controlName: string | undefined;
     readonly setValue: (values: Partial<ControlValues<Controls>>) => void;
     readonly touched: ReadonlyGrain<boolean>;
     readonly isTouched: boolean;

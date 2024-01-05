@@ -7,6 +7,8 @@ import { ControlValues } from './control-values';
 export type ControlList<ControlSchema extends ControlGroup<any>> = {
     readonly value: ReadonlyGrain<ControlValues<Controls>[]>;
     readonly rawValue: ControlValues<Controls>[];
+    parentGroup: ControlGroup<any> | undefined;
+    controlName: string | undefined;
     readonly list: (run: (item: ControlSchema, index: number) => NodeList) => Directive<Text>;
     readonly reset: () => void;
     readonly touched: ReadonlyGrain<boolean>;

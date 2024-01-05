@@ -7,7 +7,66 @@ import { ControlError } from '../../types/control-error';
 import { isNonNull } from '../../utils/is-non-null';
 import { Validator } from '../../types/validator';
 import { ControlTypes } from '../../types/control-types';
-import { getInputTypeFromElement } from '../../utils/get-input-type-from-element';
+
+// Convert element value -> grain value
+const parseValueByTarget = (control: Control<any>, target: HTMLInputElement) => {
+    const ignored = ['button', 'image', 'file', 'reset', 'hidden', 'submit'];
+    const { type } = target;
+
+    if (ignored.includes(type)) {
+        console.warn(
+            `[Nørd:Forms]: Input of type '${type}' is not supported as input directive type and may not work as intended.`
+        );
+        return;
+    }
+
+    switch (type) {
+        case 'radio':
+            // radio is a special kind of input, that needs to change values on parentElement inputs
+            const controls = Object.entries(control.parentGroup ?? {}).filter(
+                ([_, _c]) => _c.type === control.type && _c.name === control.name && _c !== control
+            );
+            // Setting the value via the parent group means the value is updated only once
+            control.parentGroup?.setValue({
+                [`${control.controlName}`]: true,
+                ...Object.fromEntries(controls.map(([name]) => [name, false])),
+            });
+        case 'checkbox':
+            control.setValue(target.checked);
+            break;
+        case 'number':
+        case 'range':
+            control.setValue(Number(target.value));
+            break;
+        // encompasses all cases not handled prior
+        default:
+            control.setValue(target.value);
+            break;
+    }
+};
+
+const setValueByTarget = (control: Control<any>, target: HTMLInputElement, value: any) => {
+    const ignored = ['button', 'image', 'file', 'reset', 'hidden', 'submit'];
+    const { type } = target;
+
+    if (ignored.includes(type)) {
+        console.warn(
+            `[Nørd:Forms]: Input of type '${type}' is not supported as input directive type and may not work as intended.`
+        );
+        return target.value;
+    }
+
+    switch (type) {
+        case 'radio':
+        case 'checkbox':
+            target.checked = value;
+            break;
+        // encompasses all not previously handled cases
+        default:
+            target.value = value;
+            break;
+    }
+};
 
 export const createControl = <Type extends ControlTypes>(init: ControlInit<Type>, validators?: Validator[]) => {
     const control = {};
@@ -48,20 +107,6 @@ export const createControl = <Type extends ControlTypes>(init: ControlInit<Type>
     let inputElement: HTMLInputElement | null = null;
     setProperty('nativeElement', { get: () => inputElement });
 
-    // Set up the input value parse
-    let inputType: 'string' | 'number' | 'boolean' = 'string';
-    const parseValue = (value: string) => {
-        if (value === null || value === undefined) {
-            return value ?? null;
-        }
-
-        return {
-            string: (value: string) => value,
-            number: (value: string) => Number(value),
-            boolean: () => inputElement?.checked ?? false,
-        }[inputType](value);
-    };
-
     // Set up value
     const _value = grain<Type | null>(init.value ?? null);
     setProperty('value', { value: _value });
@@ -76,34 +121,27 @@ export const createControl = <Type extends ControlTypes>(init: ControlInit<Type>
             }
 
             inputElement = element;
-            inputType = getInputTypeFromElement(inputElement);
 
             // Handle enabled/disabled state and attribute
             _disabled.subscribe((state) => {
                 inputElement?.[state ? 'setAttribute' : 'removeAttribute']('disabled', '');
             });
 
+            // handle name & type property
+            setProperty('name', { value: inputElement.getAttribute('name') });
+            setProperty('type', { value: inputElement.getAttribute('type') });
+
             // Set up the two way binding
             _value.subscribe((value) => {
-                // handle non checkbox inputs
-                if (inputElement && inputElement.type !== 'checkbox') {
-                    inputElement!.value = `${value ?? ''}`;
-                }
-
-                // handle checkbox inputs
-                if (inputElement && inputElement.type === 'checkbox') {
-                    if (value === true) {
-                        inputElement.setAttribute('checked', '');
-                    } else {
-                        inputElement.removeAttribute('checked');
-                    }
+                if (inputElement) {
+                    setValueByTarget(control as Control<Type>, inputElement, value);
                 }
             });
 
             element.addEventListener(`input`, (ev) => {
                 if (ev.currentTarget) {
                     const target = ev.currentTarget as HTMLInputElement;
-                    _value.set(parseValue(target.value) as Type);
+                    parseValueByTarget(control as Control<Type>, target);
                 }
             });
 

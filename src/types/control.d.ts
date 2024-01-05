@@ -3,9 +3,14 @@
 import { ReadonlyGrain } from '@grainular/nord';
 import { Validator } from './validator';
 import { ControlError } from './control-error';
+import { ControlGroup } from './control-group';
 
 export type Control<Type> = {
     readonly control: Directive<Element>;
+    parentGroup: ControlGroup<any> | undefined;
+    controlName: string | undefined;
+    name: string | undefined;
+    type: string | undefined;
     readonly value: ReadonlyGrain<Type | null>;
     readonly setValue: (value: Type | null) => void;
     readonly touched: ReadonlyGrain<boolean>;

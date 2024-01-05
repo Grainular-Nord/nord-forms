@@ -35,7 +35,16 @@ export const createControlGroup = <Controls extends GroupControls>(controls: Con
     // Process the group controls
     Object.entries(controls).forEach(([name, control]) => {
         // Add all child controls under their respective name, so that they can be accessed
+        // then add the group as parent so that they can be accessed if necessary;
         (group as any)[name] = control;
+        Object.defineProperties(control, {
+            parentGroup: {
+                value: group,
+            },
+            controlName: {
+                value: name,
+            },
+        });
 
         // Connect the passed controls to the group value, by subscribing to each one
         // and whenever the properties are changed, the group value is also changed
