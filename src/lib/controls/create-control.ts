@@ -45,7 +45,7 @@ const parseValueByTarget = (control: Control<any>, target: HTMLInputElement) => 
     }
 };
 
-const setValueByTarget = (control: Control<any>, target: HTMLInputElement, value: any) => {
+const setValueByTarget = (control: Control<any>, target: HTMLInputElement) => {
     const ignored = ['button', 'image', 'file', 'reset', 'hidden', 'submit'];
     const { type } = target;
 
@@ -59,11 +59,11 @@ const setValueByTarget = (control: Control<any>, target: HTMLInputElement, value
     switch (type) {
         case 'radio':
         case 'checkbox':
-            target.checked = value;
+            target.checked = control.value();
             break;
         // encompasses all not previously handled cases
         default:
-            target.value = value;
+            target.value = control.value();
             break;
     }
 };
@@ -134,7 +134,7 @@ export const createControl = <Type extends ControlTypes>(init: ControlInit<Type>
             // Set up the two way binding
             _value.subscribe((value) => {
                 if (inputElement) {
-                    setValueByTarget(control as Control<Type>, inputElement, value);
+                    setValueByTarget(control as Control<Type>, inputElement);
                 }
             });
 
