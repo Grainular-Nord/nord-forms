@@ -82,8 +82,8 @@ export const createControlGroup = <Controls extends GroupControls>(controls: Con
 
     // Set up derived control state
     const _touched = combined(
-        [readonly(grain(false)), ...Object.values(controls).map((control) => control.touched)],
-        (touchStates) => touchStates.slice(1).some((state) => state === true)
+        Object.values(controls).map((control) => control.touched),
+        (touchStates) => touchStates.some((state) => state === true)
     );
     // avoid lazy subscription issues
     _touched.subscribe(noop);
@@ -91,8 +91,8 @@ export const createControlGroup = <Controls extends GroupControls>(controls: Con
     setProperty('isTouched', { get: () => _touched() });
 
     const _focused = combined(
-        [readonly(grain(false)), ...Object.values(controls).map((control) => control.focused)],
-        (focusStates) => focusStates.slice(1).some((state) => state === true)
+        Object.values(controls).map((control) => control.focused),
+        (focusStates) => focusStates.some((state) => state === true)
     );
     // avoid lazy subscription issues
     _focused.subscribe(noop);

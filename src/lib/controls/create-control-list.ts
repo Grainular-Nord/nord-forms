@@ -1,10 +1,8 @@
 /** @format */
 
-import { ReadonlyGrain, combined, createDirective, derived, forEach, grain, readonly } from '@grainular/nord';
+import { combined, derived, forEach, grain, mapped, merged, readonly } from '@grainular/nord';
 import { ControlError, ControlGroup, ControlList } from '../../types';
 import { Validator } from '../../types/validator';
-import { ControlValues } from '../../types/control-values';
-import { noop } from '../../utils/noop';
 import { isNonNull } from '../../utils/is-non-null';
 
 export const createControlList = <ControlSchema extends ControlGroup<any>>(
@@ -17,43 +15,12 @@ export const createControlList = <ControlSchema extends ControlGroup<any>>(
         Object.defineProperty(list, name, { ...descriptor, ...(descriptor.value ? { writable: false } : {}) });
     };
 
-    const mapped = <T>(grains: ReadonlyGrain<T>[]): ReadonlyGrain<T[]> => {
-        const _grain = grain(grains.map((grain) => grain()));
-        grains.forEach((grain, index) =>
-            grain.subscribe((value) => {
-                _grain.update((curr) => {
-                    // process and update a new array to be returned as value
-                    const updatedArr = [...curr];
-                    updatedArr.splice(index, 1, value);
-                    return updatedArr;
-                });
-            })
-        );
-
-        return readonly(_grain);
-    };
-
-    const merged = <T>(deepGrain: ReadonlyGrain<ReadonlyGrain<T>>): ReadonlyGrain<T> => {
-        const _grain = grain<T>(deepGrain()());
-        let unsubscribe: (() => void) | null = null;
-
-        // Subscribe to the outer deep grain
-        deepGrain.subscribe((innerGrain) => {
-            if (unsubscribe) {
-                unsubscribe();
-            }
-
-            // Subscribe to the inner grain
-            unsubscribe = innerGrain.subscribe((value) => {
-                // Update the merged grain with the new value
-                _grain.set(value);
-            });
-        });
-
-        return readonly(_grain);
-    };
-
-    const _value = merged(derived(_controls, (controls) => mapped(controls.map((control) => control.value))));
+    const _value = merged(
+        derived(_controls, (controls) => {
+            const [val, ...rest] = controls.map((control) => control.value);
+            return mapped([val, ...rest]);
+        })
+    );
     setProperty('value', { value: _value });
     setProperty('rawValue', { get: () => _value() });
 
