@@ -15,6 +15,7 @@
     "@grainular/nord": "^1.7.5",
     "@rollup/plugin-commonjs": "^25.0.0",
     "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
     "@types/node": "^20.10.3",
     "alex": "^11.0.0",
     "ava": "^6.0.1",
@@ -57,5 +58,7 @@
   "private": false,
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "unpkg": "./dist/index.browser.min.js",
+  "repository": "https://github.com/Grainular-Nord/nord-forms.git"
 }
