@@ -8,6 +8,7 @@ import { ControlTypes } from './control-types';
 
 export type Control<Type extends ControlTypes> = {
     readonly control: Directive<Element>;
+    readonly id: string;
     parentGroup: ControlGroup<any> | undefined;
     controlName: string | undefined;
     name: string | undefined;

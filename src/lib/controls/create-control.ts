@@ -18,6 +18,7 @@ export const createControl = <Type extends ControlTypes>(
     const setProperty = (name: keyof Control<any>, descriptor: PropertyDescriptor) => {
         Object.defineProperty(control, name, { ...descriptor, ...(descriptor.value ? { writable: false } : {}) });
     };
+    setProperty(`id`, { value: crypto.randomUUID().slice(0, 8) });
 
     // Touched Status
     const _touched = grain(false);
@@ -75,6 +76,7 @@ export const createControl = <Type extends ControlTypes>(
             // handle name & type property
             setProperty('name', { value: inputElement.getAttribute('name') });
             setProperty('type', { value: inputElement.getAttribute('type') });
+            inputElement.setAttribute(`control-id`, (control as Control<any>).id);
 
             // Set up the two way binding
             _value.subscribe((value) => {
