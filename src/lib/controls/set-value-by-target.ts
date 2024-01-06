@@ -1,6 +1,8 @@
 /** @format */
 
-export const øSetValueByTarget = (value: any, target: HTMLInputElement) => {
+import { InputElement } from '../../types/input-element';
+
+export const øSetValueByTarget = (value: any, target: InputElement) => {
     const ignored = ['button', 'image', 'file', 'reset', 'hidden', 'submit'];
     const { type } = target;
 
@@ -12,9 +14,14 @@ export const øSetValueByTarget = (value: any, target: HTMLInputElement) => {
     }
 
     switch (type) {
+        case 'select-multiple':
+            const _values = [value].flat();
+            const options = [...target.querySelectorAll('option')] as HTMLOptionElement[];
+            options.forEach((opt) => (opt.selected = _values.includes(opt.value)));
+            break;
         case 'radio':
         case 'checkbox':
-            target.checked = value;
+            (target as HTMLInputElement).checked = value;
             break;
         // encompasses all not previously handled cases
         default:

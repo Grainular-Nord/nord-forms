@@ -1,3 +1,3 @@
 /** @format */
 
-export type ControlTypes = string | number | boolean | null;
+export type ControlTypes = string | number | boolean | string[] | null;

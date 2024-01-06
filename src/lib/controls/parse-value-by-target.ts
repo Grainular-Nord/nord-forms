@@ -1,8 +1,9 @@
 /** @format */
 
 import { Control } from '../../types';
+import { InputElement } from '../../types/input-element';
 
-export const øParseValueByTarget = (control: Control<any>, target: HTMLInputElement) => {
+export const øParseValueByTarget = (control: Control<any>, target: InputElement) => {
     const ignored = ['button', 'image', 'file', 'reset', 'hidden', 'submit'];
     const { type } = target;
 
@@ -14,6 +15,12 @@ export const øParseValueByTarget = (control: Control<any>, target: HTMLInputEle
     }
 
     switch (type) {
+        // Normal select works as expected, multi select not
+        case 'select-multiple':
+            const options = [...target.querySelectorAll('option')] as HTMLOptionElement[];
+            const selected = options.filter((opt) => opt.selected).map((opt) => opt.value);
+            control.setValue(selected);
+            break;
         case 'radio':
             // radio is a special kind of input, that needs to change values on parentElement inputs
             const controls = Object.entries(control.parentGroup ?? {}).filter(
@@ -25,7 +32,7 @@ export const øParseValueByTarget = (control: Control<any>, target: HTMLInputEle
                 ...Object.fromEntries(controls.map(([name]) => [name, false])),
             });
         case 'checkbox':
-            control.setValue(target.checked);
+            control.setValue((target as HTMLInputElement).checked);
             break;
         case 'number':
         case 'range':
