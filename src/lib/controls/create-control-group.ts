@@ -10,6 +10,31 @@ import { noop } from '../../utils/noop';
 import { ControlError } from '../../types/control-error';
 import { isNonNull } from '../../utils/is-non-null';
 
+/**
+ * Creates a control group that manages a collection of controls, allowing you to interact with them as a single unit.
+ *
+ * @template Controls - The schema of controls within the group.
+ *
+ * @param {Controls} controls - An object containing the controls to be included in the group.
+ * @param {Validator<any>[]} [validators] - An optional array of validators to apply to the control group.
+ *
+ * @returns {ControlGroup<Controls>} A ControlGroup object that represents the collection of controls.
+ *
+ * @example
+ * // Create a control group with two controls and validators.
+ * const controls = {
+ *   username: createControl('JohnDoe', [required(), minLength(3)]),
+ *   email: createControl('', [required(), email()]),
+ * };
+ *
+ * const group = createControlGroup(controls, [customValidator()]);
+ *
+ * // Access and set values for individual controls within the group.
+ * group.username.setValue('NewUsername');
+ *
+ * // Check the validity of the entire group.
+ * const isGroupValid = group.isValid;
+ */
 export const createControlGroup = <Controls extends GroupControls>(
     controls: Controls,
     validators?: Validator<any>[]
@@ -53,7 +78,7 @@ export const createControlGroup = <Controls extends GroupControls>(
         // Connect the passed controls to the group value, by subscribing to each one
         // and whenever the properties are changed, the group value is also changed
         // This is done, so that it is possible to subscribe to the group value
-        control.value.subscribe((value) => {
+        control.value.subscribe((value: any) => {
             const partial = { [name]: value } as Partial<ControlValues<Controls>>;
             setValue(partial);
 
