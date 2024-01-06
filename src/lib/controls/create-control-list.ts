@@ -6,7 +6,7 @@ import { Validator } from '../../types/validator';
 import { isNonNull } from '../../utils/is-non-null';
 
 export const createControlList = <ControlSchema extends ControlGroup<any>>(
-    initial: ControlSchema[],
+    initial: ControlSchema[] | never[] = [],
     validators?: Validator<any[]>[]
 ) => {
     const list = {};
