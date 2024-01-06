@@ -19,10 +19,32 @@ import { InputElement } from '../../types/input-element';
  *
  * @template Type - The type of value managed by the control.
  *
- * @param {ControlInit<Type>} init - The initial configuration for the control.
- * @param {Validator<Type | null>[]} [validators] - An optional array of validators to apply to the control's value.
+ * @param { ControlInit<Type> } init - The initial configuration for the control.
+ * @param { Validator<Type | null>[] } [validators] - An optional array of validators to apply to the control's value.
  *
- * @returns {Control<Type>} A control instance that manages the state and behavior of the associated input element.
+ * @returns { Control<Type> } A control instance that manages the state and behavior of the associated input element.
+ *
+ * @example
+ *
+ * ```ts
+ * import {createControl, createControlGroup} from "@grainular/nord-forms";
+ *
+ * // Create the control in the context of a controlGroup
+ * const form = createControlGroup({
+ *      name: createControl<string>({
+ *          value: null // Set the initial value
+ *      })
+ * })
+ *
+ * return html`
+ * <form>
+ *      ...
+ *      <!-- Use the created control directive to connect the form and element -->
+ *      <input ${form.name.control} type="text" />
+ * </form>`
+ * ```
+ *
+ * The HTMLInputElement and the control inside the form are now two way bound, meaning whenever the value of one changes, the value of the other will be synchronized.
  */
 
 export const createControl = <Type extends ControlTypes>(
