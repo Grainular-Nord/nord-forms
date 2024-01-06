@@ -332,9 +332,9 @@
   integrity sha512-k2Ty1JcVojjJFwrg/ThKi2ujJ7XNLYaFGNB/bWT9wGR+oSMJHMa5w+CUq6p/pVrKeNNgA7pCqEcjSnHVoqJQFw==
 
 "@grainular/nord@^1.7.5":
-  version "1.8.1"
-  resolved "https://registry.yarnpkg.com/@grainular/nord/-/nord-1.8.1.tgz#6eeaee6131d8784cf7486bb4f6529c3937b3af08"
-  integrity sha512-17TvoZUvHEywFa7n3Woft69gerEvZRGtYM5pVj90aFL02WJYIa3qXholQaw6sbLa7h0TolsSquAj16gWXljxqg==
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/@grainular/nord/-/nord-1.10.0.tgz#db90d6e0857f50eb9e4fba2b448b34b52bf0d830"
+  integrity sha512-mx3ILO0TTdwa8YP9XLkKzN4JMXCxe6t/q48d1u2SULX9+AEAAQKpFEgcjUW+wv8dmYBmqpytUYQD0GjoZSo2Jg==
 
 "@isaacs/cliui@^8.0.2":
   version "8.0.2"

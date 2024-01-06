@@ -1,6 +1,6 @@
 /** @format */
 
-import { combined, derived, forEach, grain, mapped, merged, readonly } from '@grainular/nord';
+import { combined, derived, each, grain, mapped, merged, readonly } from '@grainular/nord';
 import { ControlError, ControlGroup, ControlList } from '../../types';
 import { Validator } from '../../types/validator';
 import { isNonNull } from '../../utils/is-non-null';
@@ -26,7 +26,7 @@ export const createControlList = <ControlSchema extends ControlGroup<any>>(
     // Create the primary directive used to render the control list
     setProperty('list', {
         value: (run: (entry: ControlSchema, index: number) => NodeList) => {
-            return forEach(_controls, run);
+            return each(_controls).as(run);
         },
     });
 
