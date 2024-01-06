@@ -5,6 +5,38 @@ import { ControlError, ControlGroup, ControlList } from '../../types';
 import { Validator } from '../../types/validator';
 import { isNonNull } from '../../utils/is-non-null';
 
+/**
+ * Creates a control list that manages a collection of controls, allowing you to interact with them as a list.
+ *
+ * @template ControlSchema - The schema of controls within the list.
+ *
+ * @param {ControlSchema[]} [initial=[]] - An optional initial array of control schemas to initialize the list.
+ * @param {Validator<any[]>[]} [validators] - An optional array of validators to apply to the control list.
+ *
+ * @returns {ControlList<ControlSchema>} A ControlList object that represents the collection of controls.
+ *
+ * @example
+ * // Create a control list with two controls and validators.
+ * const list = createControlList([createControlGroup({
+ *   name: createControl({ value: null })
+ * })], [customValidator()]);
+ *
+ * // Access and manipulate controls within the list.
+ * const item = list.at(0); // Get the control at index 0
+ * list.removeAt(1); // Remove the control at index 1
+ * list.add(
+ *  createControlGroup({
+ *      name: createControl({value: null})
+ *  })
+ * ); // Add a new control to the list
+ *
+ * // Check the validity of the entire list.
+ * const isListValid = list.isValid;
+ *
+ * // Iterate through the controls in the list.
+ * const entries = list.entries();
+ */
+
 export const createControlList = <ControlSchema extends ControlGroup<any>>(
     initial: ControlSchema[] | never[] = [],
     validators?: Validator<any[]>[]
