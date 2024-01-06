@@ -31,8 +31,8 @@ export const createControlList = <ControlSchema extends ControlGroup<any>>(
     });
 
     // Set up derived control state
-    const _ItemsTouched = merged(derived(_controls, (controls) => mapped(controls.map((control) => control.touched))));
-    const _touched = derived(_ItemsTouched, (touchStates) => touchStates.some(Boolean));
+    const _itemsTouched = merged(derived(_controls, (controls) => mapped(controls.map((control) => control.touched))));
+    const _touched = derived(_itemsTouched, (touchStates) => touchStates.some(Boolean));
     setProperty('touched', { value: _touched });
     setProperty('isTouched', { get: () => _touched() });
 
