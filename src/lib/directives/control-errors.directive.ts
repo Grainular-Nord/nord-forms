@@ -3,6 +3,18 @@
 import { ReadonlyGrain, createDirective } from '@grainular/nord';
 import { ControlError } from '../../types';
 
+/**
+ * The `controlErrors` function creates a directive that displays control errors based on a provided error dictionary and a `grain` value representing errors.
+ *
+ * @template T - The type representing control errors.
+ * @template D - A dictionary type that maps control error keys to error messages.
+ *
+ * @param {ReadonlyGrain<T> | T} error - The `grain` value or direct value representing control errors.
+ * @param {D} errorDict - A dictionary that maps control error keys to error messages.
+ * @param {(error: Array<D[keyof T]>) => NodeList} run - A function that receives an array of error messages and returns a `NodeList` to display them.
+ *
+ * @returns {Directive<Text>} A directive that can be used to display control errors in the DOM based on the provided error dictionary and value.
+ */
 export const controlErrors = <T extends ControlError, D extends Record<keyof T, string>>(
     error: ReadonlyGrain<T> | T,
     errorDict: D,
