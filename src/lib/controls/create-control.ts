@@ -64,6 +64,7 @@ export const createControl = <Type extends ControlTypes>(
     // Set up value
     const _value = grain<Type | null>(init.value ?? null);
     setProperty('value', { value: _value });
+    setProperty('rawValue', { get: () => _value() });
     setProperty('setValue', { value: (value: Type | null) => _value.set(value) });
 
     // Touched Status
