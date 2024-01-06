@@ -55,7 +55,16 @@ export const createControl = <Type extends ControlTypes>(
     const setProperty = (name: keyof Control<any>, descriptor: PropertyDescriptor) => {
         Object.defineProperty(control, name, { ...descriptor, ...(descriptor.value ? { writable: false } : {}) });
     };
+
     setProperty(`id`, { value: `ø-${crypto.randomUUID().slice(0, 5)}` });
+    // Set up the control elements
+    let inputElement: InputElement | null = null;
+    setProperty('nativeElement', { get: () => inputElement });
+
+    // Set up value
+    const _value = grain<Type | null>(init.value ?? null);
+    setProperty('value', { value: _value });
+    setProperty('setValue', { value: (value: Type | null) => _value.set(value) });
 
     // Touched Status
     const _touched = grain(false);
@@ -85,15 +94,6 @@ export const createControl = <Type extends ControlTypes>(
     setProperty('isDisabled', { get: () => _disabled() });
     setProperty('disable', { value: () => _disabled.set(true) });
     setProperty('enable', { value: () => _disabled.set(false) });
-
-    // Set up the control elements
-    let inputElement: InputElement | null = null;
-    setProperty('nativeElement', { get: () => inputElement });
-
-    // Set up value
-    const _value = grain<Type | null>(init.value ?? null);
-    setProperty('value', { value: _value });
-    setProperty('setValue', { value: (value: Type | null) => _value.set(value) });
 
     // Create the control directive
     setProperty('control', {

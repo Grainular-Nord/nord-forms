@@ -6,6 +6,13 @@ import { ControlValues } from './control-values';
 import { Validator } from './validator';
 
 export type ControlList<ControlSchema extends ControlGroup<any>> = {
+    /**
+     * @readonly
+     * @type { string } -
+     *
+     * The id of the Control. Value is set during the creation of the control and can be used to uniquely identify the control.
+     */
+    readonly id: string;
     readonly value: ReadonlyGrain<ControlValues<Controls>[]>;
     readonly rawValue: ControlValues<Controls>[];
     parentGroup: ControlGroup<any> | undefined;

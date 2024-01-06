@@ -15,6 +15,7 @@ export const createControlList = <ControlSchema extends ControlGroup<any>>(
         Object.defineProperty(list, name, { ...descriptor, ...(descriptor.value ? { writable: false } : {}) });
     };
 
+    setProperty(`id`, { value: `ø-${crypto.randomUUID().slice(0, 5)}` });
     const _value = merged(
         derived(_controls, (controls) => {
             return mapped(controls.map((control) => control.value));

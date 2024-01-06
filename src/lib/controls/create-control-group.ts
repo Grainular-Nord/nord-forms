@@ -20,6 +20,7 @@ export const createControlGroup = <Controls extends GroupControls>(
         Object.defineProperty(group, name, { ...descriptor, ...(descriptor.value ? { writable: false } : {}) });
     };
 
+    setProperty(`id`, { value: `ø-${crypto.randomUUID().slice(0, 5)}` });
     const _value = grain(
         Object.fromEntries(Object.entries(controls).map(([name, control]) => [name, control.value()]))
     );

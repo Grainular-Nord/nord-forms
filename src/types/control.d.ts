@@ -1,13 +1,28 @@
 /** @format */
 
-import { ReadonlyGrain } from '@grainular/nord';
+import { Directive, ReadonlyGrain } from '@grainular/nord';
 import { Validator } from './validator';
 import { ControlError } from './control-error';
 import { ControlGroup } from './control-group';
 import { ControlTypes } from './control-types';
 
+/**
+ * A Control created using the `createControl` function.
+ */
 export type Control<Type extends ControlTypes> = {
+    /**
+     * @readonly
+     * @type { Directive<Element> } -
+     *
+     *  The `control` Directive of the `Control`. Used to connect the control to a `HTMLInputElement`to create a two way  binding
+     */
     readonly control: Directive<Element>;
+    /**
+     * @readonly
+     * @type { string } -
+     *
+     * The id of the Control. Value is set during the creation of the control and can be used to uniquely identify the control.
+     */
     readonly id: string;
     parentGroup: ControlGroup<any> | undefined;
     controlName: string | undefined;
