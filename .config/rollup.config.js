@@ -38,6 +38,9 @@ export default [
                 sourcemap: true,
                 plugins: [terser()],
                 name: 'nordForms',
+                globals: {
+                    '@grainular/nord': 'nord',
+                },
             },
         ],
     }),
