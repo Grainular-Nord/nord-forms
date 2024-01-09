@@ -1,4 +1,4 @@
 /** @format */
 
-export { controlErrors } from './control-errors.directive';
+export { controlError } from './control-error.directive';
 export { bind } from './bind.directive';
